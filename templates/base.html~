@@ -1,0 +1,26 @@
+<html>
+  <head>
+    {% if title %}
+    <title>{{ title }} - TG Search</title>
+    {% else %}
+    <title>Welcome to TG Search</title>
+    {% endif %}
+  </head>
+  <body>
+    <div>TG Search: <a>&ensp;&ensp;</a><a href="/index"> Home</a><a>&ensp;&ensp;</a> <a>&ensp;&ensp;</a><a href="/mongoreqs"> MongoReqs</a><a>&ensp;&ensp;</a><a href="/qidmaptable">Mapped QIDs </a><a>&ensp;&ensp;</a><a href="/qidmapping">QID Maping Entry</a>
+	&ensp;&ensp;</a><a href="/openreqs">Open Reqs</a></div>
+    <hr>
+	 {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+        {% for message in messages %}
+            <li>{{ message }} </li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </body>
+</html>
+
+
