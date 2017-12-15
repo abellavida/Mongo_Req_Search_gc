@@ -1,6 +1,7 @@
 from flask import Flask, render_template,request,redirect,url_for # For flask implementation
 from pymongo import MongoClient # Database connector
 from bson.objectid import ObjectId # For ObjectId to work
+from bson import Timestamp
 import json
 from datetime import datetime, timedelta
 ##from jinja2 import Template
@@ -35,10 +36,11 @@ def mongo_reqs():
 ##    db = client.reqdata 
     
 ##    reqs = dumps(db.req_data.find())
-    timestmp = datetime.now.strptime("%Y-%m-%d %H:%M:%S")
-    lastweek = timedelta(-7)
-    reqs_1 = reqs.find({ 'dateAdded': {'$gte': timestmp.timedelta(7)}})
-##    reqs_1 = reqs.find({})
+##    timestmp = timedelta(7) #.strptime("%Y-%m-%d %H:%M:%S")
+##    timestmp = Timestamp(timestmp)
+####    lastweek = timedelta(-7)
+##    reqs_1 = reqs.find({ 'dateAdded': {'$gte': timestmp}})
+    reqs_1 = reqs.find({})
 
 ##    reqs = json.loads(reqs)
     return render_template('mongoreqs.html',
