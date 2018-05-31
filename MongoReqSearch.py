@@ -8,7 +8,9 @@ from datetime import datetime, timedelta
 ##from bson.json_util import dumps
 
 
-client = MongoClient('localhost', 27017)    #Configure the connection to the database
+##client = MongoClient('localhost', 27017)    #Configure the connection to the database    client = MongoClient('mongodb+srv://paliaso:5Macacos@cluster0-dt4go.mongodb.net/test?retryWrites=true')
+client = MongoClient('mongodb+srv://paliaso:5Macacos@cluster0-dt4go.mongodb.net/test?retryWrites=true')
+
 db = client.reqdata    #Select the database
 reqs = db.req_data
 
