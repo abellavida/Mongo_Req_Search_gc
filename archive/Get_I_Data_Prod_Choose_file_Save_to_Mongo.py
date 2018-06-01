@@ -5,11 +5,11 @@ from tkinter import filedialog
 from tkinter import Tcl
 import xml.etree.ElementTree as ET
 from io import StringIO
-##import sqlite3
+import sqlite3
 from flask import render_template, flash, redirect, session, url_for, request, g
-from flask_login import login_user, logout_user, current_user, login_required
+##from flask_login import login_user, logout_user, current_user, login_required
 from flask_wtf import form
-import datetime, re
+import datetime
 ##from app import db, models
 from flask_sqlalchemy import SQLAlchemy
 from pymongo import MongoClient
@@ -20,7 +20,7 @@ from xmljson import BadgerFish
 from xmljson import parker, Parker
 from xml.etree.ElementTree import tostring, fromstring
 from bson.json_util import loads
-from bson.objectid import ObjectId
+import urllib
 
 ##from models import QIDMapping, TG_Results
 
@@ -57,10 +57,16 @@ def get_data(input_xml):
     
 
 def save_to_mongo(content):
+    user = "jcarter@abellavida.com"
+    pw = "Punkllb14!"
+
+    mongoUri = "mongodb+srv://%s:" + urllib.parse.quote("%s", safe='') + "@cluster0.mongodb.net/test" %(user, pw)
+    print(mongoUri)
 ##    client = MongoClient()
-##    client = MongoClient("192.168.1.169", 27107)
-    client = MongoClient('mongodb+srv://paliaso:5Macacos@cluster0-dt4go.mongodb.net/test?retryWrites=true')
+##    client = MongoClient("192.168.1.194", 27107)
+    client = MongoClient(mongoUri)
     dbtemp = client.temp
+##    timestmp = datetime.datetime.now().strftime("%Y-%d-%d %H:%M:%S")
     timestmp = datetime.datetime.utcnow()
     
     xmlread = content.decode('ascii')
@@ -68,40 +74,29 @@ def save_to_mongo(content):
 
     newfile = dumps(parker.data(xmlread))
     data = loads(newfile)
-    result = dbtemp.new_req_data.insert_one(data)
+    result = dbtemp.new_Ireq_data.insert_one(data)
 
-    db=client.reqdata
+    db=client.Ireqdata
+
+    copycursor = db.req_data.find()
+
+##    db.req_archive.drop_indexes()
+##    db.req_archive.reindex()
+    db.req_data.drop_indexes()
+    db.req_data.reindex()
     
-    cursor = dbtemp.new_req_data.distinct("Unit.Packet.Payload.ResultSet.Jobs.Job")
+    for document in copycursor:
+        db.req_archive.insert(document)
+        print (document)
+    
+    cursor = dbtemp.new_Ireq_data.distinct("Unit.Packet.Payload.ResultSet.Jobs.Job")
     for document in cursor:
         newreq = { "dateAdded": timestmp,
                    "req" : document}
         db.req_data.insert_one(newreq)
-    dbtemp.new_req_data.drop()
-    print("New Reqs Added")
+    dbtemp.new_Ireq_data.drop()
 
-
-def move_to_archive():
-##    client = MongoClient()
-##    client = MongoClient('mongodb://paliaso:5Macacos@mycluster0-shard-00-00.mongodb.net:27017,mycluster0-shard-00-01.mongodb.net:27017,mycluster0-shard-00-02.mongodb.net:27017/admin?ssl=true&replicaSet=Mycluster0-shard-0&authSource=admin')
-    client = MongoClient('mongodb+srv://paliaso:5Macacos@cluster0-dt4go.mongodb.net/test?retryWrites=true')
-    db=client.reqdata
-    dbarchive=client.reqarchive
-
-    source = db.req_data.find()
-    destination = dbarchive.req_archive
-    dest_ids = dbarchive.req_archive.distinct("_id", {}, {})
-
-    for doc in source:
-        source_id = doc.get("_id")
-        if source_id in dest_ids:
-            pass
-        else:
-            destination.insert(doc)
-
-    db.req_data.drop()
-    print("req table dropped")
-
+    
 
 def X_save_to_mongo(q_id, q_tag, q_text):
     client = MongoClient()
@@ -128,11 +123,6 @@ def main():
     xfile = filedialog.askopenfilename(parent=root)
 ##    input_xml = filename.read()
 ##    print (xfile)
-
-    move_to_archive()
-    print("Archived")    
-
-##    with open("//home//jc//Documents//XML Files//FGB_Prod_Input.xml", "r") as xfile:
     if xfile != None:
         page = 1
         while (page < 101):
@@ -142,7 +132,7 @@ def main():
                 fpage.text = str(page)
             xmlfile = ET.tostring(xroot)
             xmlfile = xmlfile.decode('ascii', 'ignore')
-##            print(xmlfile)
+##            print (xmlfile)
 
 ##            input_xml = open(xmlfile)
 ##            r = input_xml.read()

@@ -5,11 +5,11 @@ from tkinter import filedialog
 from tkinter import Tcl
 import xml.etree.ElementTree as ET
 from io import StringIO
-##import sqlite3
+import sqlite3
 from flask import render_template, flash, redirect, session, url_for, request, g
 from flask_login import login_user, logout_user, current_user, login_required
 from flask_wtf import form
-import datetime, re
+import datetime
 ##from app import db, models
 from flask_sqlalchemy import SQLAlchemy
 from pymongo import MongoClient
@@ -57,9 +57,8 @@ def get_data(input_xml):
     
 
 def save_to_mongo(content):
-##    client = MongoClient()
+    client = MongoClient()
 ##    client = MongoClient("192.168.1.169", 27107)
-    client = MongoClient('mongodb+srv://paliaso:5Macacos@cluster0-dt4go.mongodb.net/test?retryWrites=true')
     dbtemp = client.temp
     timestmp = datetime.datetime.utcnow()
     
@@ -82,9 +81,7 @@ def save_to_mongo(content):
 
 
 def move_to_archive():
-##    client = MongoClient()
-##    client = MongoClient('mongodb://paliaso:5Macacos@mycluster0-shard-00-00.mongodb.net:27017,mycluster0-shard-00-01.mongodb.net:27017,mycluster0-shard-00-02.mongodb.net:27017/admin?ssl=true&replicaSet=Mycluster0-shard-0&authSource=admin')
-    client = MongoClient('mongodb+srv://paliaso:5Macacos@cluster0-dt4go.mongodb.net/test?retryWrites=true')
+    client = MongoClient()
     db=client.reqdata
     dbarchive=client.reqarchive
 
@@ -132,7 +129,6 @@ def main():
     move_to_archive()
     print("Archived")    
 
-##    with open("//home//jc//Documents//XML Files//FGB_Prod_Input.xml", "r") as xfile:
     if xfile != None:
         page = 1
         while (page < 101):

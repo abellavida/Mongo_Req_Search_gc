@@ -8,14 +8,14 @@
 	<h2>Open Requisitions MONGO DB </h2>
 	<table>
 	<th><strong>Req Id</strong></th>
-	<th><strong>URL </strong></th>
+	<!--<th><strong>URL </strong></th> -->
 	<th><strong>Job Description</strong></th>
 	<th><strong>Date Added</strong></th>
 	{% for req in reqs %}
 			<tr>
-			<td>{{ req.req.Question[6] }} </td>&nbsp
-			<td><a href="{{  req.req['JobDetailLink'] }}" target="blank">Job Apply Link &nbsp</a></td>
-			<td>{{  req.req['JobDescription']|safe }}</td>
+			<td>{{ req.req.Question[7] }} </td>
+			<!--<td><a href="{{  req.req['JobDetailLink'] }}" target="blank">Job Apply Link &nbsp</a></td> -->
+			<td>{{ req.req['JobDescription']|safe }}</td>
 			<td>{{ req.dateAdded }}</td>
 			
 		</tr>
