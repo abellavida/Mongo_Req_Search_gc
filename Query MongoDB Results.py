@@ -3,7 +3,8 @@ import pprint
 from datetime import datetime, timedelta
 
 
-client = MongoClient()
+##client = MongoClient()
+client = MongoClient('mongodb+srv://paliaso:5Macacos@cluster0-dt4go.mongodb.net/test?retryWrites=true')
 ##db = client.testreqs
 ##db = client.newtest
 db = client.reqdata
